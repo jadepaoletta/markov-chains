@@ -51,16 +51,12 @@ def make_chains(text_string, n_grams):
 
         while counter < count + n_grams:
             key_ngram.append(text_list[counter])
-           # print key_ngram
             counter += 1
 
         key_bigram = tuple(key_ngram)
-        # make a list; use tuple() to convert it to a tuple
 
         chains[key_bigram] = chains.get(key_bigram, [])
         chains[key_bigram].append(text_list[count+n_grams])
-
-    print chains
 
     return chains
 
