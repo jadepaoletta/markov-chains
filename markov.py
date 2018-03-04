@@ -17,7 +17,7 @@ def open_and_read_file(file_path):
     return file_string
 
 
-def make_chains(text_string, n_grams):
+def make_chains(text_string, n_grams=2):
     """Take input text as string; return dictionary of Markov chains.
 
     A chain will be a key that consists of a tuple of (word1, word2)
@@ -67,7 +67,7 @@ def make_text(chains):
     words = []
     chains_upper = [key for key in chains.keys() if key[0][0].isupper()]
     first_tuple = choice(chains_upper)
-    words.extend(list(first_tuple))
+    words.extend(first_tuple)
 
     while first_tuple in chains:
         next_word = choice(chains[first_tuple])
@@ -76,13 +76,13 @@ def make_text(chains):
         next_tuple_list.append(next_word)
         first_tuple = tuple(next_tuple_list)
 
-    punct = ['?', '.', ',', '--']
+    # punct = ['?', '.', ',', '--']
 
-    for count, word in reversed(list(enumerate(words))):
-        if word[-1] not in punct:
-            del words[count]
-        else:
-            break
+    # for count, word in reversed(list(enumerate(words))):
+    #     if word[-1] not in punct:
+    #         del words[count]
+    #     else:
+    #         break
 
     return " ".join(words)
 
@@ -99,4 +99,4 @@ chains = make_chains(input_text, n_grams)
 # Produce random text
 random_text = make_text(chains)
 
-print random_text
+# print random_text
