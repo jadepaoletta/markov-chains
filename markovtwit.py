@@ -4,13 +4,14 @@ import os
 import sys
 from random import choice
 import twitter
+import json
 
 api = twitter.Api(consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
                       consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
                       access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
                       access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
 
-print api.VerifyCredentials()
+# print api.VerifyCredentials()
 
 def open_and_read_file(filenames):
     """Take list of files. Open them, read them, and return one long string."""
@@ -43,7 +44,7 @@ def make_chains(text_string):
 
         # or we could replace the last three lines with:
         #    chains.setdefault(key, []).append(value)
-    print chains
+    # print chains
     return chains
 
 
@@ -75,7 +76,7 @@ def make_text(chains):
         else:
             break
 
-    print " ".join(words)
+    # print " ".join(words)
     return " ".join(words)
 
 
@@ -88,13 +89,24 @@ def tweet(chains):
 
     twitter_markov = make_text(chains)
 
+    last_tweet = api.GetUserTimeline(screen_name="sushijay", count=1)
+    last_tweet = last_tweet[0].AsDict()
+    last_tweet = last_tweet["text"]
+    print "Previous tweet: ", last_tweet
+
+    # tweets = [i.AsDict() for i in last_tweet]
+    # print tweets[0]["text"]
+    # print last_tweet_list[1]
+
     status = api.PostUpdate(twitter_markov)
+    print "Newest tweet: ", twitter_markov
 
     while True:
         user_tweet = raw_input("Enter to tweet again [q to quit] > ")
 
         if user_tweet == '':
             twitter_markov = make_text(chains)
+            print "Newest tweet: ", twitter_markov
             status = api.PostUpdate(twitter_markov)
         elif user_tweet == 'q':
             break
